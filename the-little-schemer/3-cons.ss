@@ -102,7 +102,7 @@
 ; which argument change?  lat
 
 
-;;; second version, 书中的版本是找不到，就不添加
+;; second version, 书中的版本是找不到，就不添加
 
 (define insertR2
   (lambda (new old lat)
@@ -121,7 +121,7 @@
 (insertR2 'jalapeno 'and '(tacos tamales and salsa))
 
 
-;;; insertL
+;; insertL
 
 (define insertL
   (lambda (new old lat)
@@ -137,7 +137,7 @@
 
 
 
-;;; subst
+;; subst
 
 (define subst
   (lambda (new old lat)
@@ -147,10 +147,87 @@
        (cons new (cdr lat)))
       (else
        (cons (car lat)
-             subst(new old (cdr lat)))))))
+             (subst new old (cdr lat)))))))
+
+(subst 'topping 'fudge '(ice cream with fudge for dessert))
+
+
+(define subst2
+  (lambda (new o1 o2 lat)
+    (cond
+     ((null? lat) '())
+     ((or
+       (eq? (car lat) o1)
+       (eq? (car lat) o2))
+      (cons new (cdr lat)))
+     (else
+      (cons (car lat)
+           (subst2 new o1 o2 (cdr lat)))))))
+
+(subst2 'vanilla 'chocolate 'banana '(banana ice cream wich chocolate topping))
+
+
+(define multirember
+  (lambda (a lat)
+    (cond
+      ((null? lat) '())
+      ((eq? a (car lat))
+       (multirember a (cdr lat)))
+      (else
+       (cons (car lat)
+             (multirember a (cdr lat)))))))
+
+
+(multirember 'cup '(coffee cup tea cup and hick cup))
+
+
+(define multiinsertR
+  (lambda (new old lat)
+    (cond
+      ((null? lat) '())
+      ((eq? (car lat) old)
+       (cons old
+             (cons new (multiinsertR new old (cdr lat)))))
+      (else
+       (cons (car lat) (multiinsertR new old (cdr lat)))))))
+
+
+(multiinsertR 'jalapeno 'and '(tacos tamales and salsa and tocos))
+
+
+(define multiinsertL
+  (lambda (new old lat)
+    (cond
+      ((null? lat) '())
+      ((eq? (car lat) old)
+       (cons new
+             (cons old
+                   (multiinsertL new old (cdr lat)))))
+      (else
+       (cons (car lat)
+             (multiinsertL new old (cdr lat)))))))
+
+(multiinsertL 'jalapeno 'and '(tacos tamales and salsa and tocos))
 
 
 
-       
-       
+;;; The Fourth Commandment
+;;; (preliminary)
+;;; Always change at least one argument while recurring.
+;;; It must be changed to be closer to termination.
+;;; The changing argument must be tested in the termination condition:
+;;; when using cdr, test termination with null?
 
+
+(define multisubst
+  (lambda (new old lat)
+    (cond
+      ((null? lat) '())
+      ((eq? (car lat) old)
+       (cons new
+             (multisubst new old (cdr lat))))
+      (else
+       (cons (car lat)
+             (multisubst new old (cdr lat)))))))
+
+(multisubst 'vanilla 'chocolate '(banana chocolate ice cream wich chocolate topping))
