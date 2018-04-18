@@ -174,3 +174,21 @@
 
 ; 当我写出equal?后，我发现上面的eqlist写复杂了。
 
+
+
+;;; The sixth Commandment
+;;; Simplify only after the function is correct
+
+(define rember2
+  (lambda (s l)
+    ((null? l) ''())
+    ((equal? (car l) s) (cdr l))
+    (else
+     (cons (car l)
+           (rember s (cdr l))))))
+
+; 这个方法和chapter 2定义的rember区别是，它支持S-expression
+
+
+
+;;; 此外书中出现了一个 eqan? 的函数，不知道这个哪里来的。找了一会儿没找到放弃了。。。
