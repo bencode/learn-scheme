@@ -98,7 +98,79 @@
           (banana brandy)))
 
 
+(define subst*
+  (lambda (new old l)
+    (cond
+      ((null? l) '())
+      ((atom? (car l))
+       (cond
+         ((eq? (car l) old)
+          (cons new (subst* new old (cdr l))))
+         (else
+          (cons (car l) (subst* new old (cdr l))))))
+      (else
+       (cons (subst* new old (car l)) (subst* new old (cdr l)))))))
 
 
-       
-        
+(subst* 'orange 'banana
+        '(
+          (banana)
+          (split ((((banana ice)))
+                  (cream (banana))
+                  sherbet))
+          (banana)
+          (bred)
+          (banana brandy)
+          ))
+
+
+(define leftmost
+  (lambda (l)
+    (cond
+      ((null? l) '()) ; 书中没有这句话，我感觉还是加上好.
+      ((atom? (car l)) (car l))
+      (else
+       (leftmost (car l))))))
+
+(leftmost '(((hot) (tunna (and))) cheese))
+
+
+(define eqlist?
+  (lambda (l1 l2)
+    (cond
+      ((and (null? l1) (null? l2)) #t)
+      ((and (atom? (car l1)) (atom? (car l2)) (eq? (car l1) (car l2)))
+       (eqlist? (cdr l1) (cdr l2)))
+      ((and (not (atom? (car l1))) (not (atom? (car l2))))
+       (and (eqlist? (car l1) (car l2))
+            (eqlist? (cdr l1) (cdr l2))))
+      (else #f))))
+
+; 书中一开始说问了9个问题，目前我写出来是3个，估计它后面会合并。
+
+(eqlist? '(strawberry ice cream) '(strawberry cream ice))
+(eqlist? '(beef ((sausage)) (and (soda)))
+         '(beef ((sausage)) (and (soda))))
+
+
+;; Q: What is an S-expression?
+;; A: An S-expression is either an atom or a (possibly empty) list of S-expressions.
+
+
+;; test two S-expression are equal
+(define myequal?
+  (lambda (l1 l2)
+    (cond
+      ((and (null? l1) (null? l2)) #t)
+      ((and (atom? l1) (atom? l2)) #t)
+      ((or (atom? l1) (atom? l2)) #f)
+      (else
+       (and (equal? (car l1) (car l2))
+            (equal? (cdr l1) (cdr l2)))))))
+
+(myequal? '(strawberry ice cream) '(strawberry cream ice))
+(myequal? '(beef ((sausage)) (and (soda)))
+         '(beef ((sausage)) (and (soda))))
+
+; 当我写出equal?后，我发现上面的eqlist写复杂了。
+
