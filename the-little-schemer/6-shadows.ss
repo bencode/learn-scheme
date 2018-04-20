@@ -8,3 +8,8 @@
 
 (eq? 'a y) 
 (eq? x y)
+
+
+; (n + 3) ; is not arthmetic, 因为有括号
+
+
