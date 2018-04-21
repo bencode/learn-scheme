@@ -1,4 +1,4 @@
-(define atom?
+  (define atom?
   (lambda (x)
     (and (not (pair? x)) (not (null? x)))))
 
@@ -39,4 +39,33 @@
 
 (numbered? '1)
 
-(numbered? '(1 + (1 + 1)))
+(numbered? '(1 + 1 + ())) ; 我感觉书的的定义有问题，比如这种情况下应该不是numbered?
+
+
+(+ 1 1)
+
+
+;(define value
+;  (lambda (exp)
+;    (cond
+;      ((atom? exp) exp)
+;      (else
+;       ((car (cdr exp))        ; 不知道为什么写成这样不行，取出来应该是个操作符呢
+;        (value (car exp))
+;        (value (car (cdr (cdr exp)))))))))
+
+
+;(value 1)
+;(value '(1 + 2))
+
+
+(define value
+  (lambda (exp)
+    (cond
+      ((atom? exp) exp)
+      ((eq? (car (cdr exp)) '+)
+       (+ (value (car exp))
+          (value (car (cdr (cdr exp)))))))))
+
+(value '((1 + 1) + 3))  ; 只能计算简单的表达式
+(value '(1 + 2 + 2))  ; 这种就算不了
