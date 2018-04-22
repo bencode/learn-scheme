@@ -226,3 +226,84 @@
 (shorter '(a b) '(c))
 
 
+; ## Assignment
+; 多数情况下是不需要赋值的
+; 所以在js(es6(中let应该非常少用，而多数是使用const。
+
+
+(define count
+  (let ((next 0))
+    (lambda ()
+      (let ((v next))
+        (set! next (+ next 1))
+        v))))
+
+(count)
+(count)
+(count)
+              
+(define make-counter
+  (lambda ()
+    (let ((next 0))
+      (lambda ()
+        (let ((v next))
+          (set! next (+ next 1))
+          v)))))
+
+(define count1 (make-counter))
+(define count2 (make-counter))
+
+(count1)
+(count2)
+(count1)
+(count2)
+
+
+(define lazy
+  (lambda (t)
+    (let ((val #f) (flag #f))
+      (lambda ()
+        (if (not flag)
+            (begin
+              (set! val (t))  ; t is a lambda
+              (set! flag #t)))
+        val))))
+
+(define p
+  (lazy (lambda ()
+          (display "Ouch!")
+          (newline)
+          "got me")))
+(p)
+
+
+(define make-stack
+  (lambda ()
+    (let ((ls '()))
+      (lambda (msg . args)
+        (cond
+          ((eqv? msg 'empty?) (null? ls))
+          ((eqv? msg 'push!) (set! ls (cons (car args) ls)))
+          ((eqv? msg 'top) (car ls))
+          ((eqv? msg 'pop!) (set! ls (cdr ls)))
+          (else "oops"))))))
+
+(define st (make-stack))
+(st 'empty?)
+(st 'push! "hello")
+(st 'push! "world")
+(st 'push! "hi")
+
+(st 'top)
+(st 'pop!)
+(st 'top)
+
+; 面向对象啊。。
+
+(define p (list 1 2 3))
+(set-car! p 'two)
+(set-car! (cdr p) 'two)  ; cdr 返回的是列表的引用哦
+p
+(set-cdr! p '())
+p
+
