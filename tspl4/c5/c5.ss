@@ -73,40 +73,25 @@
 ;木有这个fold-left
 ;(fold-left cons '() '(1 2 3 4))
 
-; vector是什么东东
-'#(1 -2 3 -4 5 -6)
+
+;; Continuations
+
+(define call/cc call-with-current-continuation)
+
+
+(define head&tail
+  (lambda (ls)
+    (values (car ls) (cdr ls))))
+
+(head&tail '(1 2 3))
 
 
 
-(number? 42)       ;=>  #t
-(number? #t)       ;=>  #f
-(complex? 2+3i)    ;=>  #t
-(real? 2+3i)       ;=>  #f
-(real? 3.1416)     ;=>  #t
-(real? 22/7)       ;=>  #t
-(real? 42)         ;=>  #t
-(rational? 2+3i)   ;=>  #f
-(rational? 3.1416) ;=>  #t
-(rational? 22/7)   ;=>  #t
-(integer? 22/7)    ;=>  #f
-(integer? 42)      ;=>  #t
+(call-with-values
+ (lambda () (values 'bond 'james))
+ (lambda (x y) (cons y x)))
 
-; 类似引用相等判断
-(eqv? 42 42)
-(= 42 42)
-(= 42.0 42)  ;true
-(eqv? 42.0 42) ; false
+(call-with-values values list)
 
-
-(+ 1 2 3)    ;=>  6
-(- 5.3 2)    ;=>  3.3
-(- 5 2 1)    ;=>  2
-(* 1 2 3)    ;=>  6
-(/ 6 3)      ;=>  2
-(/ 22 7)     ;=>  22/7
-(expt 2 3)   ;=>  8
-(expt 4 1/2) ;=>  2.0
-
-
-
+;; eval
 
