@@ -44,5 +44,48 @@
 `(a (unquote (+ 3 3)) (unquote (* 3 3)) b)
 
 
+; ## 6.2
 
+; identical
+; eq?
+
+(eq? '() '())
+(eq? 'abc 'abc)
+(eq? "hello" "hello")   ; unspecified
+(eq? 123 123)  ; unspecified
+
+(let ((a "hello"))
+  (eq? a "hello"))
+
+
+; eqv?   ; 字符和数字的比较
+
+(eqv? -0.0 +0.0)  ;#f
+(= -0.0 +0.0) ; #t
+
+
+(= 3.0+0.0i 3.0)  ;#t
+(eqv? 3.0+0.0i 3.0)  ;#f
+
+(/ 0.0 0.0)
+
+
+; equal? 字符串 字符向量 pair vencotr等等
+
+
+(equal? "hello" "hello")
+
+(equal? '(1 2 3) '(1 2 3))  ; #t
+(eq? '(1 2 3) '(1 2 3))  ; #f
+(eqv? '(1 2 3) '(1 2 3)) ; #f
+
+
+
+
+(integer? 7+0i)
+;(integer-valued? 7+0i)   未定义
+
+(char? 'a)
+(char? #\a)
+(char? (string-ref "hello" 0))
 
