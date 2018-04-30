@@ -89,3 +89,35 @@
 (char? #\a)
 (char? (string-ref "hello" 0))
 
+
+(vector? #(a b c))
+(vector? (vector 'a 'b 'c))
+
+(symbol? 'a)
+
+(procedure? (lambda (x) x))
+
+(procedure? car)
+(procedure? 'cdr)
+(procedure? '(lambda (x) x))
+
+(call-with-current-continuation procedure?)
+
+
+; ## 6.3
+
+
+;(cons* '())  这个也不支持
+
+
+
+(define reverse2
+  (lambda (ls)
+    (let rev ((ls ls) (new '()))
+      (if (null? ls)
+          new
+          (rev (cdr ls) (cons (car ls) new))))))
+
+(reverse2 '())
+
+(reverse2 '(a b c))
