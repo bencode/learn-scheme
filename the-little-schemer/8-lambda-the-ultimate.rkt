@@ -75,4 +75,39 @@
 
 
 
+(define atom-to-function
+  (lambda (x)
+    (cond
+      ((eq? x '+) +)
+      ((eq? x 'x) *)
+      (else ^))))
 
+
+(define atom?
+  (lambda (x)
+    (and (not (pair? x)) (not (null? x)))))
+
+(define value
+  (lambda (exp)
+    (cond
+      ((atom? exp) exp)
+      (else
+       ((atom-to-function (operator exp))
+        (value (1st-sub-exp exp))
+        (value (2st-sub-exp exp)))))))
+
+(define operator
+  (lambda (exp)
+    (car exp)))
+
+(define 1st-sub-exp
+  (lambda (exp)
+    (cadr exp)))
+
+(define 2st-sub-exp
+  (lambda (exp)
+    (caddr exp)))
+
+(value '(+ 1 1))
+
+(value '(+ 1 (x 2 9)))
