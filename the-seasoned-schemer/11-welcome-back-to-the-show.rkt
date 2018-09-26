@@ -54,14 +54,72 @@
        (two-in-row-b (car lat) (cdr lat))))))
 
 (define two-in-row-b
-  (lambda (a lat)
+  (lambda (a lat)  ; 书中这个a叫做preceding
     (cond
       ((null? lat) #f)
       ((eq? a (car lat)) #t)
       (else
-       (two-in-row-b (car lat) (cdr lat))))))
+       (two-in-row-b (car lat) (cdr lat))))))  ;这里是natural recursion, 最自然，易读，不会出错的递归方式。
 
 (two-in-row3? '(Italian sardines sardines spaghetti parsley))
+(two-in-row3? '(b d e i i a g))
+
+; 并且书中的cond基本上都是两问，而不是像目前我写的多问，这会更加模式化，更有利于初学者掌握。
 
 
+; 下一题，sum-of-prefixes, 又需要一个中间变量来完成递归。
 
+(define sum-of-prefixes-b
+  (lambda (pre tup)
+    (cond
+      ((null? tup) '())
+      (else
+       (cons (+ pre (car tup)) (sum-of-prefixes-b (+ pre (car tup)) (cdr tup)))))))
+
+(define sum-of-prefixes
+  (lambda (tup)
+    (sum-of-prefixes-b 0 tup)))
+
+(sum-of-prefixes '(2 1 9 17 0))
+
+
+; The Eleventh Commandment
+; Use additional arguments when a function
+; needs to know what other arguments to the
+; function have been like so far
+
+
+; a tup is a list of numbers
+
+
+; scramble 这个函数，要是没有书的提示，我是找不出规律的，不过实现倒是不难。
+
+
+(define pick
+  (lambda (n lat)
+    (cond
+      ((eq? 1 n) (car lat))
+      (else
+       (pick (- n 1) (cdr lat))))))
+
+(pick 4 '(1 2 3 1 2 3))
+
+(define scrambel-b
+  (lambda (pre lat)
+    (cond
+      ((null? lat)
+       (cons (pick (car pre) pre) '()))
+      (else
+       (cons
+         (pick (car pre) pre)
+         (scrambel-b (cons (car lat) pre) (cdr lat)))))))
+
+(define scrambel
+  (lambda (lat)
+    (scrambel-b (cons (car lat) '()) (cdr lat))))
+
+(scrambel '(1 2 3 1 2 3 4 1 8 2 10))
+
+
+;; 这里我用了小技巧，让pre和lat的数据不重叠，这样递归时会更加方便
+;; 不过递归结束时，结果的构造和后面递归部分的构造代码有点重复，这种重复应该需要新的语法特性来消除
