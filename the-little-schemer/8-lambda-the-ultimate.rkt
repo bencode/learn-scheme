@@ -111,3 +111,11 @@
 (value '(+ 1 1))
 
 (value '(+ 1 (x 2 9)))
+
+
+;;; The Tenth Commandment
+;;; Build functions to collect more than one value at a time
+
+
+
+
