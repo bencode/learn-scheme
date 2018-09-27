@@ -121,6 +121,28 @@
 (scrambel '(1 2 3 1 2 3 4 1 8 2 10))
 
 
-;; 这里我用点小技巧，让pre和lat的数据不重叠，这样递归时会更加方便
+;; 这里我用点小技巧，让pre和lat的元素不重叠，这样递归时会更加方便
 ;; 不过递归结束时，结果的构造和后面递归部分的构造代码有点重复，这种重复目前多次见到
 ;; 就是我需要使用重复的代码来构造子元素，这种重复应该可以需要新的语法特性来消除
+
+;; 书中的实现要比我的好, 因为它是在pick时，去cons pre，解决了元素重叠问题， 这样也就避免了我上面说的重复问题。
+;; 此外书中的参数顺序为 tup, rev-pre， 顺序先后我还不确定哪种好
+;; 不过 rev-pre 这个命名比我的好，还有tup, 因为实际上确实是逆序， 并且更强调类型，书中多次在言语中强调类型。
+
+
+(define scrambel-2-b
+  (lambda (tup rev-pre)
+    (cond
+      ((null? tup) '())
+      (else
+       (cons
+        (pick (car tup)
+              (cons (car tup) rev-pre))
+        (scrambel-2-b (cdr tup) (cons (car tup) rev-pre)))))))
+
+(define scrambel-2
+  (lambda (tup)
+    (scrambel-2-b tup '())))
+
+(scrambel-2 '(1 2 3 1 2 3 4 1 8 2 10))
+
